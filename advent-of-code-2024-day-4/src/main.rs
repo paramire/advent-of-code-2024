@@ -54,29 +54,28 @@ fn build_vertical_lines(input: &Vec<Vec<char>>) -> Vec<String> {
 fn build_diagonal_lines(input: &Vec<Vec<char>>) -> Vec<String> {
     let max = input.len() - 1;
     let mut new_lines: Vec<String> = vec![String::new(); 2 * (max + 1) - 1];
-    let mut counter = 0;
-    let mut offset = 0;
     let mut x = 0;
     let mut y = 0;
+    let mut max_x = 0;
+    let mut max_y = 0;
     loop {
         // println!("x: {}, y: {}", x, y);
-        // println!("counter: {}; offset: {}", counter, offset);
-        let c = input[x][y];
-        new_lines[counter + offset].push(c);
-        if x == offset && y == counter {
-            if counter < max {
-                counter += 1;
+        // println!("max_x: {}; max_y: {}", max_x, max_y);
+        new_lines[max_x + max_y].push(input[x][y]);
+        if x == max_y && y == max_x {
+            if max_x < max {
+                max_x += 1;
             } else {
-                offset += 1;
+                max_y += 1;
             }
-            x = counter;
-            y = offset;
+            x = max_x;
+            y = max_y;
         } else {
             x -= 1;
             y += 1;
         }
 
-        if offset > max {
+        if max_y > max {
             break;
         }
     };
@@ -117,9 +116,7 @@ fn ceres_search_part1(input: &Vec<Vec<char>>) -> i32 {
 // Part 2
 fn is_x_shaped(tr: char, tl: char, br: char, bl: char) -> bool {
     // If any X or A then drop
-    if tr == 'X' || tl == 'X' || br == 'X' || bl == 'X' {
-        return false;
-    } if tr == 'A' || tl == 'A' || br == 'A' || bl == 'A' {
+    if [tr, tl, br, bl].contains(&'X') || [tr, tl, br, bl].contains(&'A') {
         return false;
     }
     // Check shape
